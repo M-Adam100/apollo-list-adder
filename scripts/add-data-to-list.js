@@ -7,6 +7,10 @@
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
   const getWalmartStorage = async ()  => {
 		const data = await chrome.storage.local.get(['number', 'listName'])
 		return data ;
@@ -14,7 +18,9 @@
 
   const addPeople = async () => {
     return new Promise(async (resolve, reject) => {
-      document.querySelector('[data-input="checkbox"]').click();
+      const sideBar = document.querySelector('.finder-explorer-sidebar-shown');
+      const mainDiv = sideBar.querySelector('div').nextElementSibling
+      mainDiv.querySelector('[data-input="checkbox"]').click();
       await sleep(1000);
       document.querySelector('div.apolloio-css-vars-reset.zp-overlay').querySelector('a').click()
       await sleep(1000);
@@ -60,7 +66,6 @@
 
 
   const CS = await getWalmartStorage();
-  console.log(CS);
   const pages = Number(CS.number);
   const listName = CS.listName;
     if (pages > 0 && CS.listName) {
@@ -68,8 +73,9 @@
         console.log("Page # ", i);
         await addPeople();
         console.log("Waiting for 2 Seconds")
-        await sleep(2000);
+        await sleep(randomIntFromInterval(7, 15)*1000);
       }
+      alert('Finished Adding!');
     } else alert("Invalid PageNumber/ListName Number");
    
 })()
